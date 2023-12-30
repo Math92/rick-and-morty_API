@@ -3,11 +3,19 @@ function getAllCharacters(url) {
         .then(response => response.json())
         .then(data => {
             populateCharacterSelect(data.results);
-            if (data.info.next) { // Verifica si hay una próxima página
-                getAllCharacters(data.info.next); // Llama recursivamente con la nueva URL
+            if (data.info.next) {
+                getAllCharacters(data.info.next);
+            } else {
+                // Cuando se carguen todos los personajes, oculta el mensaje de carga
+                document.getElementById('loadingMessage').style.display = 'none';
+                // Y muestra el select
+                document.getElementById('characterSelect').style.display = 'block';
             }
         })
-        .catch(error => console.error('Error al cargar los personajes:', error));
+        .catch(error => {
+            console.error('Error al cargar los personajes:', error);
+            document.getElementById('loadingMessage').textContent = 'Error al cargar los personajes.';
+        });
 }
 
 function populateCharacterSelect(characters) {
